@@ -1,0 +1,252 @@
+@import 'tailwindcss';
+@import '@fontsource/cormorant-garamond/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-600.css';
+@import '@fontsource/cormorant-garamond/latin-500-italic.css';
+@import '@fontsource-variable/inter/wght.css';
+
+/* Brand colors are injected as --brand-* variables from src/config/branding.ts */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+  --color-canvas: var(--brand-background);
+  --color-surface: var(--brand-surface);
+  --color-linen: var(--brand-surface-alt);
+  --color-ink: var(--brand-ink);
+  --color-muted: var(--brand-ink-muted);
+  --color-line: var(--brand-line);
+  --color-sage: var(--brand-accent);
+  --color-sage-strong: var(--brand-accent-strong);
+  --color-sage-soft: var(--brand-accent-soft);
+
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --shadow-soft: 0 1px 2px rgb(42 41 39 / 0.04), 0 8px 24px -8px rgb(42 41 39 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(42 41 39 / 0.05), 0 24px 48px -16px rgb(42 41 39 / 0.22);
+}
+
+@layer base {
+  html {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: 8rem;
+    overflow-x: clip;
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-canvas);
+    min-height: 100dvh;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  ::selection {
+    background: var(--color-sage-soft);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-sage-strong);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  button,
+  [role='button'] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+  img {
+    max-width: 100%;
+  }
+  dialog {
+    max-width: none;
+    max-height: none;
+  }
+  dialog::backdrop {
+    background: rgb(26 25 23 / 0.55);
+    backdrop-filter: blur(2px);
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    font-weight: 500;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-sage-strong);
+  }
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .field {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    padding: 0.7rem 0.9rem;
+    color: var(--color-ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field:hover {
+    border-color: color-mix(in oklab, var(--color-sage) 60%, var(--color-line));
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-sage-strong);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-sage) 30%, transparent);
+  }
+  .field[aria-invalid='true'] {
+    border-color: #b4553f;
+  }
+  .field[readonly],
+  .field:disabled {
+    background: var(--color-linen);
+    color: var(--color-muted);
+    opacity: 1;
+  }
+  .safe-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Scroll reveal: content is visible by default; motion only when allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s var(--ease-soft),
+      transform 0.8s var(--ease-soft);
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-settle {
+    animation: hero-settle 2.4s var(--ease-soft) both;
+  }
+  .fade-up {
+    animation: fade-up 0.8s var(--ease-soft) both;
+  }
+  .sheet-in {
+    animation: sheet-in 0.32s var(--ease-soft) both;
+  }
+  .fade-in {
+    animation: fade-in 0.25s ease-out both;
+  }
+}
+
+@keyframes hero-settle {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Leaflet theming */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--color-linen);
+}
+.map-tint-warm .leaflet-tile-pane {
+  filter: grayscale(0.55) sepia(0.18) saturate(0.9) brightness(1.03) contrast(0.92);
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+  background: rgb(255 253 249 / 0.85) !important;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  box-shadow: var(--shadow-lift);
+}
+.leaflet-popup-content {
+  margin: 14px 16px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.leaflet-bar a {
+  color: var(--color-ink);
+}
+.place-marker {
+  background: none;
+  border: none;
+}
+
+/* Print: only the property summary sheet */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  [data-print-hide] {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
+.print-only {
+  display: none;
+}
