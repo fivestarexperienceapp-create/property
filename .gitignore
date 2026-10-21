@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-*/
+*.local
+.DS_Store
+.vite/
+coverage/
+test-results/
+playwright-report/
+# Original, unoptimized photos (run `npm run photos` to publish optimized copies)
+photos-src/
+
+# Packaged copies
+*.zip
+# Preview screenshots
+preview-*.png
