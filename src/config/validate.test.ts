@@ -76,10 +76,13 @@ describe('customer-mode safeguards', () => {
     bad.site.featuredPropertyId = 'missing';
     bad.properties[0].highlights.push({ title: 'Test', text: 'Test', icon: 'home', photoId: 'nope' });
     bad.properties[0].neighborhoodId = 'nowhere';
+    bad.properties[0].stories = { slideSeconds: 1, slides: [{ photoId: 'ghost', title: 'Ghost slide' }] };
     const text = validateConfig(bad).errors.join('\n');
     expect(text).toMatch(/featuredPropertyId/);
     expect(text).toMatch(/unknown photo "nope"/);
     expect(text).toMatch(/neighborhoodId "nowhere"/);
+    expect(text).toMatch(/slideSeconds must be between 3 and 20/);
+    expect(text).toMatch(/story slide "Ghost slide" references unknown photo "ghost"/);
   });
 });
 

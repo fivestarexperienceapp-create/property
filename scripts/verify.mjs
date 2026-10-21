@@ -395,6 +395,56 @@ log('\nProperty features');
     return 'OK';
   });
 
+  await check('Feature stories: hero and tile entry, tap and keyboard navigation, pause, autoplay, closing call to action', async () => {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const dialog = page.getByRole('dialog', { name: /feature stories/ });
+    const position = async () => (await dialog.locator('[aria-live=polite]').textContent()).match(/Story (\d+) of (\d+)/).slice(1).map(Number);
+    await page.getByRole('button', { name: 'Watch story' }).click();
+    await dialog.waitFor();
+    const [first, total] = await position();
+    const tiles = await page.locator('#stories li').count();
+    expect(first === 1 && total === tiles && total >= 3, `opened at ${first}/${total}, ${tiles} tiles`);
+    await page.keyboard.press('ArrowRight');
+    expect((await position())[0] === 2, 'arrow right');
+    // The "next" tap zone covers the right two-thirds of the story frame.
+    const zone = await dialog.getByRole('button', { name: 'Next story' }).first().boundingBox();
+    await page.mouse.click(zone.x + zone.width * 0.7, zone.y + zone.height / 2);
+    expect((await position())[0] === 3, 'tap right side');
+    await page.mouse.click(zone.x - zone.width * 0.25, zone.y + zone.height / 2);
+    expect((await position())[0] === 2, 'tap left side');
+    await dialog.getByRole('button', { name: 'Pause story' }).click();
+    await page.waitForTimeout(6500);
+    expect((await position())[0] === 2, 'advanced while paused');
+    await dialog.getByRole('button', { name: 'Play story' }).click();
+    await page.waitForFunction(() => /Story 3 of/.test(document.querySelector('dialog[open] [aria-live=polite]')?.textContent ?? ''), null, { timeout: 9000 });
+    // Press and hold pauses the progress bar without changing slides.
+    const bar = dialog.locator('div.flex.gap-1[aria-hidden] > span > span').nth(2);
+    await page.mouse.move(zone.x + zone.width * 0.7, zone.y + zone.height / 2);
+    await page.mouse.down();
+    await page.waitForTimeout(400);
+    const before = await bar.evaluate((el) => el.style.transform);
+    await page.waitForTimeout(800);
+    const after = await bar.evaluate((el) => el.style.transform);
+    await page.mouse.up();
+    await page.waitForTimeout(100);
+    expect(before === after, `progress moved while holding: ${before} → ${after}`);
+    expect((await position())[0] === 3, 'releasing a hold changed slides');
+    for (let i = 3; i < total; i += 1) await page.keyboard.press('ArrowRight');
+    expect((await position())[0] === total, 'reach last slide');
+    await dialog.getByRole('heading', { name: 'Want to see it in person?' }).waitFor();
+    await dialog.getByRole('button', { name: 'Schedule a Tour' }).click();
+    await dialog.waitFor({ state: 'hidden' });
+    await page.getByRole('dialog', { name: 'Schedule a tour' }).waitFor();
+    await page.keyboard.press('Escape');
+    await page.locator('#stories').scrollIntoViewIfNeeded();
+    await page.locator('#stories li').nth(3).getByRole('button').click();
+    await dialog.waitFor();
+    expect((await position())[0] === 4, 'tile opens its own slide');
+    await page.keyboard.press('Escape');
+    await dialog.waitFor({ state: 'hidden' });
+    return `${total} slides; pause button and press-and-hold hold, autoplay advances, closing CTA opens the tour form`;
+  });
+
   await check('Neighborhood map: category filters, list sync, sample popups, no directions', async () => {
     const section = page.locator('#neighborhood');
     await section.scrollIntoViewIfNeeded();
@@ -560,6 +610,34 @@ log('\nMobile');
     expect(counter === '2 / 10', `after swipe: ${counter}`);
     await page.keyboard.press('Escape');
     return counter;
+  });
+
+  await check('Stories respond to swipes, taps and drag-to-close on touch screens', async () => {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.getByRole('button', { name: 'Watch story' }).tap();
+    const dialog = page.getByRole('dialog', { name: /feature stories/ });
+    await dialog.waitFor();
+    const position = async () => Number((await dialog.locator('[aria-live=polite]').textContent()).match(/Story (\d+)/)[1]);
+    const cdp = await context.newCDPSession(page);
+    const vp = page.viewportSize();
+    const touch = async (type, x, y) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] });
+    const drag = async (x0, y0, x1, y1) => {
+      await touch('touchStart', x0, y0);
+      for (let i = 1; i <= 8; i += 1) await touch('touchMove', x0 + ((x1 - x0) * i) / 8, y0 + ((y1 - y0) * i) / 8);
+      await touch('touchEnd');
+      await page.waitForTimeout(250);
+    };
+    await drag(vp.width * 0.8, vp.height / 2, vp.width * 0.2, vp.height / 2);
+    expect((await position()) === 2, `swipe left → ${await position()}`);
+    await page.touchscreen.tap(vp.width * 0.85, vp.height / 2);
+    await page.waitForTimeout(150);
+    expect((await position()) === 3, `tap right → ${await position()}`);
+    await page.touchscreen.tap(vp.width * 0.1, vp.height / 2);
+    await page.waitForTimeout(150);
+    expect((await position()) === 2, `tap left → ${await position()}`);
+    await drag(vp.width / 2, vp.height * 0.4, vp.width / 2, vp.height * 0.85);
+    await dialog.waitFor({ state: 'hidden' });
+    return 'swipe, taps and drag-down close';
   });
 
   await check('Mobile menu opens and navigates', async () => {
@@ -738,6 +816,20 @@ log('\nMotion preferences');
       expect(hiddenAfter === 0, `${hiddenAfter} elements still hidden after scrolling`);
       return `hidden before scroll: ${hiddenBefore}`;
     });
+    if (motion === 'reduce') {
+      await check('Stories wait for the visitor when reduced motion is on', async () => {
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.getByRole('button', { name: 'Watch story' }).click();
+        const dialog = page.getByRole('dialog', { name: /feature stories/ });
+        await dialog.waitFor();
+        await page.waitForTimeout(6500);
+        const text = await dialog.locator('[aria-live=polite]').textContent();
+        expect(/Story 1 of/.test(text), `auto-advanced to: ${text}`);
+        expect(!(await dialog.getByRole('button', { name: 'Pause story' }).count()), 'pause control shown without autoplay');
+        await page.keyboard.press('Escape');
+        return 'no autoplay; tap or arrow keys to continue';
+      });
+    }
     await context.close();
   }
 }

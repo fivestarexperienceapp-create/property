@@ -154,8 +154,15 @@ export function validateConfig(config: ShowcaseConfig, options: ValidationOption
     if (p.tour && !(p.tour.kind === 'video' && !/^https?:/i.test(p.tour.url)) && !isHttpsUrl(p.tour.url)) {
       errors.push(`${at}.tour.url must be an https embed URL.`);
     }
-    if (p.floorPlan?.image && options.fileExists && !options.fileExists(p.floorPlan.image)) {
-      errors.push(`${at}: missing floor plan image public/${p.floorPlan.image}.`);
+    if (p.stories) {
+      const seconds = p.stories.slideSeconds;
+      if (seconds !== undefined && (!Number.isFinite(seconds) || seconds < 3 || seconds > 20)) {
+        errors.push(`${at}.stories.slideSeconds must be between 3 and 20.`);
+      }
+      for (const slide of p.stories.slides ?? []) {
+        if (!slide.title.trim()) errors.push(`${at}: every story slide needs a title.`);
+        if (!photoIds.has(slide.photoId)) errors.push(`${at}: story slide "${slide.title}" references unknown photo "${slide.photoId}".`);
+      }
     }
     if (live && p.isFictional) errors.push(`${at} is marked fictional. Customer sites can only publish real listings.`);
   }

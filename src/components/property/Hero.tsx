@@ -6,7 +6,20 @@ import { toast } from '../../state/toast';
 import { ResponsiveImage } from '../ui/ResponsiveImage';
 import { IconButton } from '../ui/Button';
 
-export function Hero({ property, onOpenGallery, onExplore, onShare }: { property: Property; onOpenGallery: (index: number) => void; onExplore: () => void; onShare: () => void }) {
+export function Hero({
+  property,
+  onOpenGallery,
+  onExplore,
+  onShare,
+  onPlayStory,
+}: {
+  property: Property;
+  onOpenGallery: (index: number) => void;
+  onExplore: () => void;
+  onShare: () => void;
+  /** Opens the feature stories; the button is hidden when stories are off. */
+  onPlayStory?: () => void;
+}) {
   const favorites = useFavorites();
   const saved = favorites.has(property.id);
   const openHouse = upcomingOpenHouses(property.openHouses)[0];
@@ -28,6 +41,21 @@ export function Hero({ property, onOpenGallery, onExplore, onShare }: { property
         className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(18_17_15/0.9)_0%,rgb(18_17_15/0.72)_38%,rgb(18_17_15/0.3)_62%,rgb(18_17_15/0.2)_100%)] md:bg-[linear-gradient(to_top,rgb(18_17_15/0.86)_0%,rgb(18_17_15/0.55)_32%,rgb(18_17_15/0.08)_62%,rgb(18_17_15/0.22)_100%)]"
       />
 
+      {onPlayStory && (
+        <button
+          type="button"
+          onClick={onPlayStory}
+          data-print-hide
+          className="absolute top-4 left-4 inline-flex items-center gap-2.5 rounded-full border border-white/30 bg-black/25 py-1 pr-4 pl-1 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-black/40 md:top-6 md:left-8"
+        >
+          <span aria-hidden className="rounded-full bg-[conic-gradient(var(--color-sage-soft),var(--color-sage),#c9a15b,var(--color-sage-soft))] p-[2px]">
+            <span className="block size-9 overflow-hidden rounded-full border-2 border-black/40">
+              <ResponsiveImage photo={property.photos[1] ?? property.photos[0]} decorative sizes="80px" className="size-full" />
+            </span>
+          </span>
+          Watch story
+        </button>
+      )}
       <div className="absolute top-4 right-4 flex gap-2 md:top-6 md:right-8" data-print-hide>
         <IconButton
           tone="glass"

@@ -18,8 +18,9 @@ npm run verify          # full browser check of a fresh build (first run: npx pl
 ```
 
 `npm run verify` builds the app, serves it under repository subpaths and at a root domain, and runs
-37 checks: asset paths, deep links and refreshes, manifest and service-worker scope, offline mode,
-the update prompt, isolation between two apps on one origin, calculator edge cases, gallery swipe,
+40 checks: asset paths, deep links and refreshes, manifest and service-worker scope, offline mode,
+the update prompt, isolation between two apps on one origin, calculator edge cases, gallery and
+story gestures,
 map filters and fallback, saved homes, compare, notes, inquiry flow, QR destination, printing,
 overflow at 320–1440px, console errors and customer-mode validation.
 
@@ -53,7 +54,7 @@ All content lives in typed files in `src/config/` — components contain no cust
 | `site.ts` | `appId`, **`demoMode`**, `publicUrl`, titles, app name, locale, currency, time zone, featured listing |
 | `branding.ts` | Brokerage name, wordmark, tagline, colors, vector mark (also used to generate icons), legal lines |
 | `agent.ts` | Agent profile, photo, contact numbers (E.164), email, scheduling link, credentials |
-| `properties.ts` | Listings: facts, copy, highlights, photos, floor plan, tour embed, open houses |
+| `properties.ts` | Listings: facts, copy, highlights, photos, feature stories, tour embed, open houses |
 | `neighborhoods.ts` | Map center/zoom, optional home marker, nearby places |
 | `integrations.ts` | Map tile provider and attribution, inquiry form endpoint |
 
@@ -62,9 +63,12 @@ Checklist for a new customer:
 1. `site.ts`: give a new unique `appId` (e.g. `jane-smith-homes`), set `demoMode: false`, update titles.
 2. `branding.ts`, `agent.ts`: real brokerage and agent details; put required disclosures (license
    text, Equal Housing Opportunity, etc.) in `branding.legal` and `agent.credentials`.
-3. `properties.ts`: real listings with `isFictional: false`. Floor plans are either drawn from
-   `levels[].rooms` or an image (`floorPlan.image`). `tour` accepts YouTube/Vimeo/Matterport embed URLs
-   and is hidden when omitted. Open houses use fixed `YYYY-MM-DD` dates and hide once past.
+3. `properties.ts`: real listings with `isFictional: false`. `tour` accepts YouTube/Vimeo/Matterport
+   embed URLs and is hidden when omitted.
+   **Feature stories** need no setup: each listing gets a phone-style story built from its cover photo,
+   highlights and remaining photos (up to 8), any upcoming open house and a closing contact slide.
+   To hand-pick the sequence, add `stories: { slides: [{ photoId, kicker, title, text }] }`;
+   `slideSeconds` (3–20, default 6) sets the pace and `enabled: false` turns stories off. Open houses use fixed `YYYY-MM-DD` dates and hide once past.
 4. `neighborhoods.ts`: real places with coordinates, `sample: false`, `isSample: false`, and `home`
    coordinates if the listing address may be shown. Directions links appear only for real places.
 5. Photos: see below. Delete the demo folders in `public/media/` (and optionally `art/` and

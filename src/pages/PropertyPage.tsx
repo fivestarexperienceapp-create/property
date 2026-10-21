@@ -3,6 +3,7 @@ import { Copy } from 'lucide-react';
 import type { Property } from '../config/types';
 import { href } from '../lib/router';
 import { copyText, shareLink, shareOrCopy } from '../lib/share';
+import { buildStory } from '../lib/stories';
 import { toast } from '../state/toast';
 import { AgentCard } from '../components/contact/AgentCard';
 import { InquiryForm } from '../components/contact/InquiryForm';
@@ -10,7 +11,6 @@ import { MobileContactBar } from '../components/layout/MobileContactBar';
 import { MoreHomes } from '../components/listings/MoreHomes';
 import { NeighborhoodExplorer } from '../components/map/NeighborhoodExplorer';
 import { Details } from '../components/property/Details';
-import { FloorPlanSection } from '../components/property/FloorPlan';
 import { GallerySection } from '../components/property/GallerySection';
 import { Hero } from '../components/property/Hero';
 import { Highlights } from '../components/property/Highlights';
@@ -21,6 +21,8 @@ import { OpenHouseBanner } from '../components/property/OpenHouseBanner';
 import { Overview } from '../components/property/Overview';
 import { PrintSummary } from '../components/property/PrintSummary';
 import { scrollToSection, SectionNav, type NavSection } from '../components/property/SectionNav';
+import { StoriesSection } from '../components/property/StoriesSection';
+import { StoryViewer } from '../components/property/StoryViewer';
 import { TourSection } from '../components/property/TourSection';
 import { TrackTools } from '../components/property/TrackTools';
 import { Button } from '../components/ui/Button';
@@ -31,7 +33,10 @@ import { Sheet } from '../components/ui/Sheet';
 export function PropertyPage({ property }: { property: Property }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [manualLink, setManualLink] = useState<string | null>(null);
+  const [story, setStory] = useState<number | null>(null);
+  const slides = useMemo(() => buildStory(property), [property]);
   const closeLightbox = useCallback(() => setLightbox(null), []);
+  const closeStory = useCallback(() => setStory(null), []);
   const closeManual = useCallback(() => setManualLink(null), []);
 
   const share = useCallback(async () => {
@@ -43,26 +48,32 @@ export function PropertyPage({ property }: { property: Property }) {
 
   const sections = useMemo<NavSection[]>(() => {
     const list: NavSection[] = [{ id: 'overview', label: 'Overview' }];
+    if (slides.length) list.push({ id: 'stories', label: 'Stories' });
     if (property.highlights.length) list.push({ id: 'highlights', label: 'Highlights' });
     list.push({ id: 'photos', label: 'Photos' }, { id: 'details', label: 'Details' });
-    if (property.floorPlan) list.push({ id: 'floor-plan', label: 'Floor plan' });
     if (property.tour) list.push({ id: 'tour', label: 'Tour' });
     list.push({ id: 'neighborhood', label: 'Neighborhood' }, { id: 'payment', label: 'Payment' }, { id: 'contact', label: 'Contact' });
     return list;
-  }, [property]);
+  }, [property, slides.length]);
 
   return (
     <>
       <div data-print-hide>
-        <Hero property={property} onOpenGallery={setLightbox} onExplore={() => scrollToSection('overview')} onShare={share} />
+        <Hero
+          property={property}
+          onOpenGallery={setLightbox}
+          onExplore={() => scrollToSection('overview')}
+          onShare={share}
+          onPlayStory={slides.length ? () => setStory(0) : undefined}
+        />
         <KeyFacts property={property} />
         <SectionNav sections={sections} />
         <Overview property={property} onOpenGallery={setLightbox} />
         <OpenHouseBanner property={property} />
+        <StoriesSection slides={slides} onPlay={setStory} />
         <Highlights property={property} onOpenGallery={setLightbox} />
         <GallerySection property={property} onOpenGallery={setLightbox} />
         <Details property={property} />
-        <FloorPlanSection property={property} />
         <TourSection property={property} />
         <NeighborhoodExplorer property={property} />
         <MortgageCalculator key={property.id} property={property} />
@@ -85,6 +96,7 @@ export function PropertyPage({ property }: { property: Property }) {
       </div>
       <PrintSummary property={property} />
       <Lightbox photos={property.photos} index={lightbox} onIndex={setLightbox} onClose={closeLightbox} title={property.name} />
+      <StoryViewer property={property} slides={slides} start={story} onClose={closeStory} />
       <MobileContactBar propertyId={property.id} />
       <Sheet open={!!manualLink} onClose={closeManual} title="Share this home" description="Copy this link to share it." size="sm">
         <div className="flex gap-2 pb-6">

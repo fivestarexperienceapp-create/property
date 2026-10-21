@@ -163,6 +163,20 @@
   .fade-in {
     animation: fade-in 0.25s ease-out both;
   }
+  .story-zoom {
+    animation-name: story-zoom;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+}
+
+@keyframes story-zoom {
+  from {
+    transform: scale(1.03);
+  }
+  to {
+    transform: scale(1.13);
+  }
 }
 
 @keyframes hero-settle {

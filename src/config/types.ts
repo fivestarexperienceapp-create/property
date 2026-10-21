@@ -161,41 +161,28 @@ export interface FactGroup {
   items: { label: string; value: string }[];
 }
 
-export type RoomKind =
-  | 'living'
-  | 'kitchen'
-  | 'bedroom'
-  | 'bath'
-  | 'office'
-  | 'utility'
-  | 'circulation'
-  | 'outdoor'
-  | 'garage';
-
-export interface FloorRoom {
-  name: string;
-  /** Position and size in plan units (any consistent unit). */
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  kind: RoomKind;
-  /** Sides drawn as open (dashed) for open-concept spaces. */
-  open?: Array<'top' | 'right' | 'bottom' | 'left'>;
+export interface StorySlide {
+  /** Photo id from this listing. */
+  photoId: string;
+  /** Short label above the title, e.g. "Cook" or "Relax". */
+  kicker?: string;
+  title: string;
+  text?: string;
+  /** CSS object-position for the tall story crop, e.g. "40% 50%". Defaults to the photo's focus. */
+  focus?: string;
 }
 
-export interface FloorLevel {
-  id: string;
-  name: string;
-  width: number;
-  height: number;
-  rooms: FloorRoom[];
-}
-
-export interface FloorPlan {
-  levels: FloorLevel[];
-  /** Optional image floor plan (path under public/) used instead of the drawn layout. */
-  image?: string;
+/**
+ * Swipeable feature stories. Optional: by default the story is built from the
+ * listing's highlights and photos, opened by a cover and closed by a contact slide.
+ */
+export interface StoriesConfig {
+  /** Set false to hide stories for this listing. */
+  enabled?: boolean;
+  /** Seconds each slide plays before advancing (3–20). Default 6. */
+  slideSeconds?: number;
+  /** Custom slides shown between the cover and the closing slide. */
+  slides?: StorySlide[];
 }
 
 export type TourKind = 'youtube' | 'vimeo' | 'matterport' | 'iframe' | 'video';
@@ -250,8 +237,8 @@ export interface Property {
   highlights: Highlight[];
   facts: FactGroup[];
   photos: Photo[];
-  floorPlan?: FloorPlan;
   tour?: TourConfig;
+  stories?: StoriesConfig;
   openHouses?: OpenHouse[];
   neighborhoodId: string;
   /** Marks invented demo listings. Customer sites cannot publish fictional listings. */
