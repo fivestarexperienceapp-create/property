@@ -12,14 +12,14 @@ export const agent: AgentConfig = {
     'Every contact button, inquiry form and scheduling link on this page connects directly to the agent on a live site.',
   ],
   specialties: ['First-time buyers', 'Move-up homes', 'New construction'],
-  serviceArea: 'Greater St. Louis area',
+  serviceArea: 'Greater Nashville area',
   languages: ['English'],
   credentials: '',
   contact: {
     // 555-01xx numbers and example.com addresses are reserved for fiction.
-    phone: '+13145550142',
-    phoneDisplay: '(314) 555-0142',
-    sms: '+13145550142',
+    phone: '+16155550142',
+    phoneDisplay: '(615) 555-0142',
+    sms: '+16155550142',
     email: 'john.doe@example.com',
     schedulingUrl: '',
     websiteUrl: '',

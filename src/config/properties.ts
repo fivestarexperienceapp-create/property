@@ -34,9 +34,9 @@ export const properties: Property[] = [
     yearBuilt: 2019,
     style: 'Contemporary farmhouse',
     community: 'Willow Creek Estates',
-    location: { area: 'Greater St. Louis', streetAddress: '' },
+    location: { area: 'Nashville, TN', streetAddress: '' },
     hoaMonthly: 65,
-    annualTaxes: 7800,
+    annualTaxes: 5100,
     annualInsurance: 1800,
     highlights: [
       {
@@ -107,7 +107,7 @@ export const properties: Property[] = [
         items: [
           { label: 'Community', value: 'Willow Creek Estates' },
           { label: 'HOA', value: '$65 / month' },
-          { label: 'Property taxes', value: '$7,800 / year' },
+          { label: 'Property taxes', value: '$5,100 / year' },
         ],
       },
     ],
@@ -159,9 +159,9 @@ export const properties: Property[] = [
     yearBuilt: 2021,
     style: 'Modern townhome',
     community: 'Linden Square',
-    location: { area: 'Greater St. Louis', streetAddress: '' },
+    location: { area: 'Nashville, TN', streetAddress: '' },
     hoaMonthly: 210,
-    annualTaxes: 5400,
+    annualTaxes: 3650,
     annualInsurance: 1200,
     highlights: [
       {
@@ -212,7 +212,7 @@ export const properties: Property[] = [
         items: [
           { label: 'Community', value: 'Linden Square' },
           { label: 'HOA', value: '$210 / month' },
-          { label: 'Property taxes', value: '$5,400 / year' },
+          { label: 'Property taxes', value: '$3,650 / year' },
         ],
       },
     ],
@@ -244,9 +244,9 @@ export const properties: Property[] = [
     yearBuilt: 2008,
     style: 'Transitional',
     community: 'Hawthorne Ridge',
-    location: { area: 'Greater St. Louis', streetAddress: '' },
+    location: { area: 'Nashville, TN', streetAddress: '' },
     hoaMonthly: 95,
-    annualTaxes: 11200,
+    annualTaxes: 7300,
     annualInsurance: 2600,
     highlights: [
       {
@@ -298,7 +298,7 @@ export const properties: Property[] = [
         items: [
           { label: 'Community', value: 'Hawthorne Ridge' },
           { label: 'HOA', value: '$95 / month' },
-          { label: 'Property taxes', value: '$11,200 / year' },
+          { label: 'Property taxes', value: '$7,300 / year' },
         ],
       },
     ],

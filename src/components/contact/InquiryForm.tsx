@@ -39,7 +39,7 @@ function sampleValues(type: InquiryType, propertyId: string): Values {
   return {
     name: 'Alex Sample',
     email: 'alex.sample@example.com',
-    phone: '(314) 555-0175',
+    phone: '(615) 555-0175',
     date: upcomingWeekday(6),
     time: 'Afternoon',
     message:

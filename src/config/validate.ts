@@ -95,8 +95,8 @@ export function validateConfig(config: ShowcaseConfig, options: ValidationOption
   // ---- Agent -------------------------------------------------------------
   const contact = agent.contact;
   if (!agent.name.trim()) errors.push('agent.name is required.');
-  if (contact.phone && !/^\+\d{8,15}$/.test(contact.phone)) errors.push('agent.contact.phone must be E.164, e.g. +13145551234.');
-  if (contact.sms && !/^\+\d{8,15}$/.test(contact.sms)) errors.push('agent.contact.sms must be E.164, e.g. +13145551234.');
+  if (contact.phone && !/^\+\d{8,15}$/.test(contact.phone)) errors.push('agent.contact.phone must be E.164, e.g. +16155551234.');
+  if (contact.sms && !/^\+\d{8,15}$/.test(contact.sms)) errors.push('agent.contact.sms must be E.164, e.g. +16155551234.');
   if (contact.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email)) errors.push('agent.contact.email is not a valid email address.');
   for (const key of ['schedulingUrl', 'websiteUrl'] as const) {
     const value = contact[key];

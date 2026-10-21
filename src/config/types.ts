@@ -80,9 +80,9 @@ export interface BrandingConfig {
 }
 
 export interface AgentContact {
-  /** E.164 format, e.g. "+13145550142". Calls are disabled in demo mode. */
+  /** E.164 format, e.g. "+16155550142". Calls are disabled in demo mode. */
   phone?: string;
-  /** Human-friendly phone, e.g. "(314) 555-0142". */
+  /** Human-friendly phone, e.g. "(615) 555-0142". */
   phoneDisplay?: string;
   /** Number for text messages (E.164). Defaults to phone. */
   sms?: string;
@@ -105,7 +105,7 @@ export interface AgentConfig {
   specialties: string[];
   serviceArea?: string;
   languages?: string[];
-  /** Licensing line for real sites only (e.g. "Licensed in Missouri"). Leave empty in demos. */
+  /** Licensing line for real sites only (e.g. "Licensed in Tennessee"). Leave empty in demos. */
   credentials?: string;
   contact: AgentContact;
 }
@@ -225,7 +225,7 @@ export interface Property {
   style: string;
   community: string;
   location: {
-    /** General area label, e.g. "Greater St. Louis". */
+    /** General area label, e.g. "Nashville, TN". */
     area: string;
     /** Street address for real listings. Leave "" to hide. */
     streetAddress: string;

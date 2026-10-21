@@ -16,12 +16,12 @@ function withPlaceholders(): ShowcaseConfig {
   const c = clone();
   c.site.appId = DEMO_APP_ID;
   c.agent.name = 'John Doe';
-  c.agent.contact.phone = '+13145550142';
+  c.agent.contact.phone = '+16155550142';
   c.agent.contact.email = 'john.doe@example.com';
   c.properties[0].isFictional = true;
   c.properties[0].photos[0].credit.isDemoArtwork = true;
   c.neighborhoods[0].isSample = true;
-  c.neighborhoods[0].places.push({ id: 'zz-sample', name: 'Sample Café', category: 'restaurants', lat: 38.6, lng: -90.3, sample: true });
+  c.neighborhoods[0].places.push({ id: 'zz-sample', name: 'Sample Café', category: 'restaurants', lat: 36.15, lng: -86.8, sample: true });
   return c;
 }
 
@@ -61,10 +61,10 @@ describe('customer-mode safeguards', () => {
   });
 
   it('detects placeholder phones and emails', () => {
-    expect(isFictionalPhone('+13145550142')).toBe(true);
-    expect(isFictionalPhone('(314) 555-0199')).toBe(true);
+    expect(isFictionalPhone('+16155550142')).toBe(true);
+    expect(isFictionalPhone('(615) 555-0199')).toBe(true);
     expect(isFictionalPhone('+10000000000')).toBe(true);
-    expect(isFictionalPhone('+13145550242')).toBe(false);
+    expect(isFictionalPhone('+16155550242')).toBe(false);
     expect(isPlaceholderEmail('john.doe@example.com')).toBe(true);
     expect(isPlaceholderEmail('agent@mail.example.org')).toBe(true);
     expect(isPlaceholderEmail('me@site.test')).toBe(true);

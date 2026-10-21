@@ -12,7 +12,7 @@ export const site: SiteConfig = {
   publicUrl: '',
   title: 'The Willow House · Willow & Stone Realty',
   description:
-    'Explore The Willow House, a four-bedroom contemporary farmhouse in Willow Creek Estates. A demo property showcase with fictional agency and listings.',
+    'Explore The Willow House, a four-bedroom contemporary farmhouse in Willow Creek Estates, Nashville. A demo property showcase with fictional agency and listings.',
   appName: 'Willow & Stone Homes',
   appShortName: 'W&S Homes',
   locale: 'en-US',
