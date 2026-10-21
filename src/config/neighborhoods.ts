@@ -11,7 +11,7 @@ function sample(id: string, name: string, category: PlaceCategory, lat: number, 
 
 export const neighborhoods: Neighborhood[] = [
   {
-    id: 'sample-st-louis',
+    id: 'sample-nashville',
     title: 'Sample neighborhood explorer',
     intro:
       'A general look at the Nashville area. The homes in this demo are fictional, so no home location is shown, and every marker below is an illustrative placeholder rather than a real business or school.',

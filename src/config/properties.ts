@@ -137,7 +137,7 @@ export const properties: Property[] = [
       ],
     },
     openHouses: [{ date: upcomingWeekday(6), start: '13:00', end: '15:00', note: 'Sample open house for the demo' }],
-    neighborhoodId: 'sample-st-louis',
+    neighborhoodId: 'sample-nashville',
     isFictional: true,
   },
   {
@@ -222,7 +222,7 @@ export const properties: Property[] = [
       photo('the-linden-townhome', 'bedroom', 'Primary bedroom with soft linens and a large window', 'Primary bedroom'),
       photo('the-linden-townhome', 'terrace', 'Rooftop terrace with lounge seating, planters and a skyline view at sunset', 'Rooftop terrace'),
     ],
-    neighborhoodId: 'sample-st-louis',
+    neighborhoodId: 'sample-nashville',
     isFictional: true,
   },
   {
@@ -308,7 +308,7 @@ export const properties: Property[] = [
       photo('hawthorne-ridge-residence', 'kitchen', 'Kitchen with navy island, white cabinetry and brass pendant lights', 'Chef’s kitchen'),
       photo('hawthorne-ridge-residence', 'porch', 'Screened porch with wicker seating overlooking woods', 'Screened porch'),
     ],
-    neighborhoodId: 'sample-st-louis',
+    neighborhoodId: 'sample-nashville',
     isFictional: true,
   },
 ];
